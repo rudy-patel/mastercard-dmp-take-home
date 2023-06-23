@@ -1,4 +1,4 @@
-package main.java.mastercard.dmp.requests;
+package com.api.models;
 
 public class TransactionRequest {
     private long cardNum;

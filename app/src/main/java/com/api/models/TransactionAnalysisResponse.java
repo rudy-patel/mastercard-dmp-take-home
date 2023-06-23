@@ -1,10 +1,12 @@
-package main.java.mastercard.dmp.responses;
+package com.api.models;
 
 public class TransactionAnalysisResponse {
     private String cardNumber;
     private double transactionAmount;
     private String transactionStatus;
     private int cardUsageCount;
+
+    public TransactionAnalysisResponse() {}
 
     public String getCardNumber() {
         return cardNumber;

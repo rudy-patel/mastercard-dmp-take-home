@@ -1,4 +1,4 @@
-package main.java.mastercard.dmp.take.home.controllers;
+package com.api.controllers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,14 +7,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.api.models.*;
+
+@RestController
 public class TransactionController {
 
     @PostMapping("/analyzeTransaction")
     public ResponseEntity<?> analyzeTransaction(@RequestBody TransactionRequest request) {
+        System.out.println("Hit the endpoint");
         final long cardNum = request.getCardNum();
         final double amount = request.getAmount();
-        
+
+        System.out.println("Card num: " + cardNum);
+        System.out.println("Amount: " + amount);
+
         // Fetch the number of times the card has been used in the last 7 days
         List<Integer> cardUsageCounts = fetchCardUsageCounts(cardNum);
         
@@ -84,7 +95,7 @@ public class TransactionController {
         }
         
         // TODO: remove?
-        System.out.println("Returning: {}", cardUsageCounts);
+        System.out.println("Returning: "+ cardUsageCounts);
         return cardUsageCounts;
     }
 }
