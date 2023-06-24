@@ -1,15 +1,15 @@
 package com.api.models;
 
-import javax.validation.constraints.Min;
+// import javax.validation.constraints.Min;
 import org.jetbrains.annotations.NotNull;
 
 public class TransactionRequest {
-    @NotNull(value = "Card number is required")
-    private long cardNum;
+    // @NotNull(value = "Card number is required")
+    // private Long cardNum;
 
-    @NotNull(value = "Transaction amount is required")
-    @Min(value = 0, message = "Transaction amount must be greater than or equal to 0")
-    private double amount;
+    // @NotNull(value = "Transaction amount is required")
+    // @Min(value = 0, message = "Transaction amount must be greater than or equal to 0")
+    // private Double amount;
 
     @NotNull(value = "A transaction is required")
     private Transaction transaction;
@@ -22,19 +22,19 @@ public class TransactionRequest {
         this.transaction = transaction;
     }
 
-    public long getCardNum() {
-        return cardNum;
-    }
+    // public long getCardNum() {
+    //     return cardNum;
+    // }
 
-    public void setCardNum(long cardNum) {
-        this.cardNum = cardNum;
-    }
+    // public void setCardNum(long cardNum) {
+    //     this.cardNum = cardNum;
+    // }
 
-    public double getAmount() {
-        return amount;
-    }
+    // public double getAmount() {
+    //     return amount;
+    // }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    // public void setAmount(double amount) {
+    //     this.amount = amount;
+    // }
 }

@@ -21,6 +21,12 @@ dependencies {
     implementation("org.apache.httpcomponents:httpclient")
     implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.11.1")
     implementation("org.slf4j:slf4j-api")
+
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
 }
 
 tasks.withType<JavaCompile> {
@@ -32,42 +38,3 @@ tasks.jar {
         attributes["Main-Class"] = "com.java.server.App"
     }
 }
-
-
-// plugins {
-//     // Apply the application plugin to add support for building a CLI application in Java.
-//     application
-// }
-
-// repositories {
-//     // Use Maven Central for resolving dependencies.
-//     mavenCentral()
-// }
-
-// dependencies {
-//     // Use JUnit Jupiter for testing.
-//     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-
-//     // This dependency is used by the application.
-//     implementation("com.google.guava:guava:31.1-jre")
-
-//     // Servlet API
-//     implementation("javax.servlet:javax.servlet-api:4.0.1")
-
-//     // JSON libraries (example: Jackson)
-//     implementation("com.fasterxml.jackson.core:jackson-core:2.12.5")
-//     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.5")
-
-//     // Jetty server
-//     implementation("org.eclipse.jetty:jetty-server:9.4.43.v20210629")
-// }
-
-// application {
-//     // Define the main class for the application.
-//     mainClass.set("mastercard.dmp.take.home.App")
-// }
-
-// tasks.named<Test>("test") {
-//     // Use JUnit Platform for unit tests.
-//     useJUnitPlatform()
-// }

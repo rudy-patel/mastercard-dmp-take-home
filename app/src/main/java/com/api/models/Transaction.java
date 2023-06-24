@@ -5,11 +5,11 @@ import javax.validation.constraints.NotNull;
 
 public class Transaction {
     @NotNull(message = "Card number is required")
-    private long cardNum;
+    private Long cardNum;
 
     @NotNull(message = "Transaction amount is required")
     @Min(value = 0, message = "Transaction amount must be greater than or equal to 0")
-    private double amount;
+    private Double amount;
 
     public long getCardNum() {
         return cardNum;

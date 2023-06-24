@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.jetbrains.annotations.NotNull;
+// import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,6 +66,7 @@ public class TransactionController {
         response.setCardUsageCount(totalCardUsageCount);
 
         System.out.println("analyzeTransaction: returning response: " + response);
+        
         // Return the TransactionAnalysisResponse as the response entity
         return ResponseEntity.ok(response);
     }
