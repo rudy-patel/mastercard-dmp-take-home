@@ -1,6 +1,7 @@
 package com.api.validation;
 
 import javax.validation.ConstraintValidator;
+
 import javax.validation.ConstraintValidatorContext;
 
 public class CardNumberValidator implements ConstraintValidator<CardNumber, Long> {
