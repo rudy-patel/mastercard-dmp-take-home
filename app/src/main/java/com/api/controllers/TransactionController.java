@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.model.*;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
