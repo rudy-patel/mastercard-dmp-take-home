@@ -1,16 +1,9 @@
 package com.api.controllers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.validation.Valid;
 
-// import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.models.*;
+import com.api.services.ExternalApiService;
 
 @RestController
 @Validated
 public class TransactionController {
+
+    @Autowired
+    private final ExternalApiService externalApiService;
+
+    public TransactionController(ExternalApiService externalApiService) {
+        this.externalApiService = externalApiService;
+    }
 
     @PostMapping("/analyzeTransaction")
     public ResponseEntity<?> analyzeTransaction(
@@ -38,12 +39,15 @@ public class TransactionController {
         System.out.println("analyzeTransaction: Amount: " + amount);
 
         // Fetch the number of times the card has been used in the last 7 days
-        List<Integer> cardUsageCounts = fetchCardUsageCounts(cardNum);
+        List<Integer> cardUsageCounts = externalApiService.fetchCardUsageCounts(cardNum);
+        System.out.println("analyzeTransaction: card usage counts: " + cardUsageCounts);
+        // List<Integer> cardUsageCounts = fetchCardUsageCounts(cardNum);
         
         // Calculate the total number of times the card has been used in the last 7 days
         int totalCardUsageCount = cardUsageCounts.stream()
         .mapToInt(Integer::intValue)
         .sum();
+        System.out.println("analyzeTransaction: total card usage count: " + totalCardUsageCount);
 
         // Implement the fraud detection logic
         boolean isFraudulent = false;
@@ -82,38 +86,43 @@ public class TransactionController {
         return cardNumber;
     }
 
-    private List<Integer> fetchCardUsageCounts(long cardNum) {
-        System.out.println("fetchCardUsageCounts: entry");
-        List<Integer> cardUsageCounts = new ArrayList<>();
+    // private List<Integer> fetchCardUsageCounts(long cardNum) {
+    //     System.out.println("fetchCardUsageCounts: entry");
+    //     List<Integer> cardUsageCounts = new ArrayList<>();
 
-        try {
-            System.out.println("fetchCardUsageCounts: fetching random value from external service");
-            String endpointUrl = "https://www.random.org/integers/?num=7&min=0&max=12&col=1&base=10&format=plain&rnd=new";
-            URL url = new URL(endpointUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+    //     try {
+    //         System.out.println("fetchCardUsageCounts: fetching random value from external service");
+    //         String endpointUrl = getExternalApiUrl();
+    //         URL url = new URL(endpointUrl);
+    //         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    //         connection.setRequestMethod("GET");
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    int cardUsageCount = Integer.parseInt(line.trim());
-                    cardUsageCounts.add(cardUsageCount);
-                }
-                reader.close();
-            } else {
-                // TODO: maybe not sout? Handle error response
-                System.out.println("Error: " + responseCode);
-            }
-            System.out.println("fetchCardUsageCounts: disconnecting from external service");
-            connection.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    //         int responseCode = connection.getResponseCode();
+    //         if (responseCode == HttpURLConnection.HTTP_OK) {
+    //             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    //             String line;
+    //             while ((line = reader.readLine()) != null) {
+    //                 int cardUsageCount = Integer.parseInt(line.trim());
+    //                 cardUsageCounts.add(cardUsageCount);
+    //             }
+    //             reader.close();
+    //         } else {
+    //             // TODO: maybe not sout? Handle error response
+    //             System.out.println("Error: " + responseCode);
+    //         }
+    //         System.out.println("fetchCardUsageCounts: disconnecting from external service");
+    //         connection.disconnect();
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
         
-        // TODO: remove?
-        System.out.println("fetchCardUsageCounts: returning: " + cardUsageCounts);
-        return cardUsageCounts;
-    }
+    //     // TODO: remove?
+    //     System.out.println("fetchCardUsageCounts: returning: " + cardUsageCounts);
+    //     return cardUsageCounts;
+    // }
+
+    // protected String getExternalApiUrl() {
+    //     // Return the actual URL in the production code
+    //     return "https://www.random.org/integers/?num=7&min=0&max=12&col=1&base=10&format=plain&rnd=new";
+    // }
 }

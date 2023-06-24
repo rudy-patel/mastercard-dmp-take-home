@@ -3,33 +3,56 @@ package com.api.controllers;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
+import com.api.services.ExternalApiService;
 import com.configuration.TestConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+// import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestConfiguration.class)
+// @RunWith(MockitoJUnitRunner.class)
 public class TransactionControllerIntegrationTest {
+    private static final int VALID_AMOUNT = 5000;
+    private static final double AMOUNT_OVER_LIMIT = 50000.1;
+    private static final Integer VALID_CARD_USAGE_COUNT = 40;
     private static final String DECLINED = "Declined";
+    private static final String APPROVED = "Approved";
     private static final long CARD_NUM = 5206840000000001L;
     private static final String OBFUSCATED_CARD_NUM = "5206********0001";
     
@@ -42,139 +65,85 @@ public class TransactionControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private ExternalApiService testExternalApiService;
+
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
         request = new TransactionRequest();
+        objectMapper = new ObjectMapper();
         transaction = new Transaction();
         transaction.setCardNum(CARD_NUM);
         request.setTransaction(transaction);
+
+        // Set the mock implementation of ExternalApiService
+        // when(externalApiService.fetchCardUsageCounts(anyLong()))
+        // .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
     }
 
     @Test
-    void testAnalyzeTransaction_happyCase_Successful() throws Exception {
+    public void testAnalyzeTransaction_happyCase_TransactionSuccessful() throws Exception {
         // Prepare the request payload
-        double expectedTransactionAmount = 3.99;
-        transaction.setAmount(expectedTransactionAmount);
+        transaction.setAmount(VALID_AMOUNT);
 
         // Send the request
         TransactionAnalysisResponse response = sendRequestAndGetResponse();
 
         // Validate the response
         assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
-        assertEquals(expectedTransactionAmount, response.getTransactionAmount());
-
-        // how do we want to approach this? this value can change.
-        // assertThat(response.getTransactionStatus()).isEqualTo("Approved");
+        assertEquals(VALID_AMOUNT, response.getTransactionAmount());
+        assertEquals(APPROVED, response.getTransactionStatus());
     }
 
     @Test
-    void testAnalyzeTransaction_AmountOverLimit_Declined() throws Exception {
+    public void testAnalyzeTransaction_AmountOverLimit_TransactionDeclined() throws Exception {
         // Prepare the request payload
-        transaction.setAmount(50000.1); // amount is > 50000
+        transaction.setAmount(AMOUNT_OVER_LIMIT);
 
         // Send the request
         TransactionAnalysisResponse response = sendRequestAndGetResponse();
         
         // Validate the response
+        assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
+        assertEquals(AMOUNT_OVER_LIMIT, response.getTransactionAmount());
         assertEquals(DECLINED, response.getTransactionStatus());
     }
 
-    // @Test
-    // void testAnalyzeTransaction_CardUsageOverLimit_Declined() throws Exception {
-    //     System.out.println("Running test: testAnalyzeTransaction_CardUsageOverLimit_Declined");
+    @Test
+    public void testAnalyzeTransaction_cardUsageTooLow_transactionDeclined() throws Exception {
+        // Prepare the request payload
+        transaction.setAmount(VALID_AMOUNT);
+        int cardUsageTooLow = 30;
 
-    //     // Prepare the request payload
-    //     TransactionRequest request = new TransactionRequest();
-    //     Transaction transaction = new Transaction();
-    //     transaction.setCardNum(5206840000000001L);
-    //     transaction.setAmount(100.0);
-    //     request.setTransaction(transaction);
+        // Configure the mock behavior
+        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+                .thenReturn(Collections.singletonList(cardUsageTooLow));
 
-    //     // Send multiple requests to simulate card usage over limit
-    //     for (int i = 0; i < 61; i++) {
-    //         mockMvc.perform(MockMvcRequestBuilders
-    //                 .post("/analyzeTransaction")
-    //                 .contentType(MediaType.APPLICATION_JSON)
-    //                 .content(objectMapper.writeValueAsString(request)));
-    //     }
+        // Send the request
+        TransactionAnalysisResponse response = sendRequestAndGetResponse();
 
-    //     // Send the request and validate the response
-    //     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-    //             .post("/analyzeTransaction")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(request)))
-    //             .andExpect(MockMvcResultMatchers.status().isOk())
-    //             .andReturn();
+        // Validate the response
+        assertEquals(DECLINED, response.getTransactionStatus());
+    }
 
-    //     // Extract the response body and assert its contents
-    //     String responseBody = mvcResult.getResponse().getContentAsString();
-    //     TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
-    //     assertThat(response.getTransactionStatus()).isEqualTo("Declined");
+    @Test
+    public void testAnalyzeTransaction_cardUsageTooHigh_transactionDeclined() throws Exception {
+        // Prepare the request payload
+        transaction.setAmount(VALID_AMOUNT);
+        int cardUsageTooHigh = 70;
 
-    //     System.out.println("Test succeeded!");
-    // }
+        // Configure the mock behavior
+        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+                .thenReturn(Collections.singletonList(cardUsageTooHigh));
 
-    // @Test
-    // void testAnalyzeTransaction_CardUsageUnderLimitButAmountOverThreshold_Declined() throws Exception {
-    //     System.out.println("Running test: testAnalyzeTransaction_CardUsageUnderLimitButAmountOverThreshold_Declined");
+        // Send the request
+        TransactionAnalysisResponse response = sendRequestAndGetResponse();
 
-    //     // Prepare the request payload
-    //     TransactionRequest request = new TransactionRequest();
-    //     Transaction transaction = new Transaction();
-    //     transaction.setCardNum(5206840000000001L);
-    //     transaction.setAmount(9000.0);
-    //     request.setTransaction(transaction);
-
-    //     // Send multiple requests to simulate card usage under limit
-    //     for (int i = 0; i < 34; i++) {
-    //         mockMvc.perform(MockMvcRequestBuilders
-    //                 .post("/analyzeTransaction")
-    //                 .contentType(MediaType.APPLICATION_JSON)
-    //                 .content(objectMapper.writeValueAsString(request)));
-    //     }
-
-    //     // Send the request and validate the response
-    //     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-    //             .post("/analyzeTransaction")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(request)))
-    //             .andExpect(MockMvcResultMatchers.status().isOk())
-    //             .andReturn();
-
-    //     // Extract the response body and assert its contents
-    //     String responseBody = mvcResult.getResponse().getContentAsString();
-    //     TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
-    //     assertThat(response.getTransactionStatus()).isEqualTo("Declined");
-
-    //     System.out.println("Test succeeded!");
-    // }
-
-    // @Test
-    // void testAnalyzeTransaction_AllOtherTransactions_Approved() throws Exception {
-    //     System.out.println("Running test: testAnalyzeTransaction_AllOtherTransactions_Approved");
-
-    //     // Prepare the request payload
-    //     TransactionRequest request = new TransactionRequest();
-    //     Transaction transaction = new Transaction();
-    //     transaction.setCardNum(5206840000000001L);
-    //     transaction.setAmount(100.0);
-    //     request.setTransaction(transaction);
-
-    //     // Send the request and validate the response
-    //     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-    //             .post("/analyzeTransaction")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(request)))
-    //             .andExpect(MockMvcResultMatchers.status().isOk())
-    //             .andReturn();
-
-    //     // Extract the response body and assert its contents
-    //     String responseBody = mvcResult.getResponse().getContentAsString();
-    //     TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
-    //     assertThat(response.getTransactionStatus()).isEqualTo("Approved");
-
-    //     System.out.println("Test succeeded!");
-    // }
+        // Validate the response
+        assertEquals(DECLINED, response.getTransactionStatus());
+    }
 
     private TransactionAnalysisResponse sendRequestAndGetResponse()
             throws Exception, JsonProcessingException, UnsupportedEncodingException, JsonMappingException {

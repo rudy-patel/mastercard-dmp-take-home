@@ -24,6 +24,11 @@ dependencies {
 
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.31.0")
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.12.4")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
