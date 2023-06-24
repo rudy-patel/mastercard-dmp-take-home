@@ -79,8 +79,8 @@ public class TransactionControllerIntegrationTest {
         request.setTransaction(transaction);
 
         // Set the mock implementation of ExternalApiService
-        // when(externalApiService.fetchCardUsageCounts(anyLong()))
-        // .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
+        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+        .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
     }
 
     @Test
