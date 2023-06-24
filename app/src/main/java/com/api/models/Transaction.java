@@ -1,9 +1,7 @@
 package com.api.models;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.api.validation.CardNumber;
 
