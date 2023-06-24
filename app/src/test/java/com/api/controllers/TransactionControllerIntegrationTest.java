@@ -16,22 +16,27 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-// import org.junit.Before;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+// import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -46,7 +51,11 @@ import java.util.Collections;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("TransactionController-test")
 @Import(TestConfiguration.class)
+@RunWith(SpringRunner.class)
+// @MockBean(ExternalApiServiceImpl.class)
+// @RunWith(SpringRunner.class)
 // @RunWith(MockitoJUnitRunner.class)
 public class TransactionControllerIntegrationTest {
     private static final int VALID_AMOUNT = 5000;
@@ -66,13 +75,13 @@ public class TransactionControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
+    @MockBean
     private ExternalApiService externalApiService;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        externalApiService = mock(ExternalApiServiceImpl.class);
+        // externalApiService = mock(ExternalApiServiceImpl.class);
         
         request = new TransactionRequest();
         objectMapper = new ObjectMapper();
@@ -117,7 +126,7 @@ public class TransactionControllerIntegrationTest {
     public void testAnalyzeTransaction_cardUsageTooLow_transactionDeclined() throws Exception {
         // Prepare the request payload
         transaction.setAmount(VALID_AMOUNT);
-        int cardUsageTooLow = 30;
+        int cardUsageTooLow = 5;
 
         // Configure the mock behavior
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
