@@ -4,39 +4,21 @@ import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
 import com.api.services.ExternalApiService;
-import com.api.services.ExternalApiServiceImpl;
 import com.configuration.TestConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.Before;
 import org.junit.Test;
-// import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -54,9 +36,6 @@ import java.util.Collections;
 @ActiveProfiles("TransactionController-test")
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
-// @MockBean(ExternalApiServiceImpl.class)
-// @RunWith(SpringRunner.class)
-// @RunWith(MockitoJUnitRunner.class)
 public class TransactionControllerIntegrationTest {
     private static final int VALID_AMOUNT = 5000;
     private static final double AMOUNT_OVER_LIMIT = 50000.1;
@@ -80,9 +59,6 @@ public class TransactionControllerIntegrationTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        // externalApiService = mock(ExternalApiServiceImpl.class);
-        
         request = new TransactionRequest();
         objectMapper = new ObjectMapper();
         transaction = new Transaction();
@@ -150,7 +126,6 @@ public class TransactionControllerIntegrationTest {
         // Configure the mock behavior
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
                 .thenReturn(Collections.singletonList(cardUsageTooHigh));
-        // doReturn(Collections.singletonList(cardUsageTooHigh)).when(externalApiService.fetchCardUsageCounts(CARD_NUM));
 
         // Send the request
         TransactionAnalysisResponse response = sendRequestAndGetResponse();
