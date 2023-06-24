@@ -5,7 +5,7 @@
 build
 
 # Ignore .DS_STORE files
-.DS_STORE
+**/.DS_STORE
 
 # Ignore generated build directories
 app/bin/
