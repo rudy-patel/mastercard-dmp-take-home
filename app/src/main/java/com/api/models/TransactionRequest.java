@@ -1,7 +1,14 @@
 package com.api.models;
 
+import javax.validation.constraints.Min;
+import org.jetbrains.annotations.NotNull;
+
 public class TransactionRequest {
+    @NotNull(value = "Card number is required")
     private long cardNum;
+
+    @NotNull(value = "Transaction amount is required")
+    @Min(value = 0, message = "Transaction amount must be greater than or equal to 0")
     private double amount;
 
     public long getCardNum() {

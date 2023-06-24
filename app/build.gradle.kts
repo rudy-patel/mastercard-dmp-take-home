@@ -16,11 +16,11 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.apache.httpcomponents:httpclient")
     implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.11.1")
     implementation("org.slf4j:slf4j-api")
-    // implementation("org.slf4j:slf4j-simple")
 }
 
 tasks.withType<JavaCompile> {

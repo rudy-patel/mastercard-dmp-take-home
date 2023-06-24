@@ -7,7 +7,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
+
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,16 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.models.*;
 
 @RestController
+@Validated
 public class TransactionController {
 
     @PostMapping("/analyzeTransaction")
-    public ResponseEntity<?> analyzeTransaction(@RequestBody TransactionRequest request) {
-        System.out.println("Hit the endpoint");
+    public ResponseEntity<?> analyzeTransaction(
+        final @Valid @RequestBody TransactionRequest request
+    ) {
+        System.out.println("analyzeTransaction: entry");
+
+        System.out.println("analyzeTransaction: parsing request");
         final long cardNum = request.getCardNum();
         final double amount = request.getAmount();
 
-        System.out.println("Card num: " + cardNum);
-        System.out.println("Amount: " + amount);
+        System.out.println("analyzeTransaction: Card num: " + cardNum);
+        System.out.println("analyzeTransaction: Amount: " + amount);
 
         // Fetch the number of times the card has been used in the last 7 days
         List<Integer> cardUsageCounts = fetchCardUsageCounts(cardNum);
@@ -54,22 +64,28 @@ public class TransactionController {
         response.setTransactionStatus(transactionStatus);
         response.setCardUsageCount(totalCardUsageCount);
 
+        System.out.println("analyzeTransaction: returning response: " + response);
         // Return the TransactionAnalysisResponse as the response entity
         return ResponseEntity.ok(response);
     }
 
-    private String obfuscateCardNumber(long cardNum) {
+    private String obfuscateCardNumber(long cardNum) {  // change param name, confusing
+        System.out.println("obfuscateCardNumber: entry");
         String cardNumber = String.valueOf(cardNum);
         if (cardNumber.length() > 12) {
             cardNumber = cardNumber.substring(0, 4) + "********" + cardNumber.substring(cardNumber.length() - 4);
         }
+
+        System.out.println("obfuscateCardNumber: returning obfusacated cardNumber: " + cardNumber);
         return cardNumber;
     }
 
     private List<Integer> fetchCardUsageCounts(long cardNum) {
+        System.out.println("fetchCardUsageCounts: entry");
         List<Integer> cardUsageCounts = new ArrayList<>();
 
         try {
+            System.out.println("fetchCardUsageCounts: fetching random value from external service");
             String endpointUrl = "https://www.random.org/integers/?num=7&min=0&max=12&col=1&base=10&format=plain&rnd=new";
             URL url = new URL(endpointUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -88,14 +104,14 @@ public class TransactionController {
                 // TODO: maybe not sout? Handle error response
                 System.out.println("Error: " + responseCode);
             }
-
+            System.out.println("fetchCardUsageCounts: disconnecting from external service");
             connection.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
         
         // TODO: remove?
-        System.out.println("Returning: "+ cardUsageCounts);
+        System.out.println("fetchCardUsageCounts: returning: " + cardUsageCounts);
         return cardUsageCounts;
     }
 }
