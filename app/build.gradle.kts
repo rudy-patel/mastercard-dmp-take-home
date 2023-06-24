@@ -2,6 +2,7 @@ plugins {
     id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.31"
+    id("jacoco")
 }
 
 group = "com"
@@ -46,4 +47,39 @@ tasks.jar {
 
 tasks.named<Test>("test") {
     exclude("**/TransactionControllerIntegrationTest.*")
+
+    useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.test)
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
+    }
+}
+
+tasks.withType<JacocoReport> {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it).apply {
+                exclude("**ExternalApiServiceImpl.class")
+            }
+        }))
+    }
+}
+
+tasks.withType<JacocoCoverageVerification> {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.map {
+            fileTree(it).apply {
+                exclude("**ExternalApiServiceImpl.class")
+            }
+        }))
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
