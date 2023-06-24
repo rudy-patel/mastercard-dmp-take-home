@@ -1,10 +1,15 @@
 package com.api.models;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.api.validation.CardNumber;
 
 public class Transaction {
     @NotNull(message = "Card number is required")
+    @CardNumber
     private Long cardNum;
 
     @NotNull(message = "Transaction amount is required")

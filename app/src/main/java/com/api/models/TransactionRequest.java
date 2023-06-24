@@ -1,10 +1,13 @@
 package com.api.models;
 
+import javax.validation.Valid;
+
 import org.jetbrains.annotations.NotNull;
 
 public class TransactionRequest {
 
-    @NotNull(value = "A transaction is required")
+    @Valid
+    @NotNull
     private Transaction transaction;
 
     public Transaction getTransaction() {

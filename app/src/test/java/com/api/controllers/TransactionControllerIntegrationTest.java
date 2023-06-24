@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.io.UnsupportedEncodingException;
@@ -135,6 +136,61 @@ public class TransactionControllerIntegrationTest {
         assertEquals(VALID_AMOUNT, response.getTransactionAmount());
         assertEquals(DECLINED, response.getTransactionStatus());
     }
+
+    @Test
+    public void testAnalyzeTransaction_missingTransactionField_badRequest() throws Exception {
+        // Prepare the request payload with missing transaction field
+        String requestBody = "{}";
+
+        // Send the request
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .post("/analyzeTransaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        // Extract the response body and assert its contents
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertTrue(responseBody.contains("A required input parameter is missing."));
+    }
+
+    @Test
+    public void testAnalyzeTransaction_invalidCardNumber_badRequest() throws Exception {
+        // Prepare the request payload with invalid card number
+        String requestBody = "{\"transaction\": {\"cardNum\": 123, \"amount\": 1000}}";
+
+        // Send the request
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .post("/analyzeTransaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        // Extract the response body and assert its contents
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertTrue(responseBody.contains("Card number must be at least 16 digits long"));
+    }
+
+    @Test
+    public void testAnalyzeTransaction_invalidTransactionAmount_badRequest() throws Exception {
+        // Prepare the request payload with invalid transaction amount
+        String requestBody = "{\"transaction\": {\"cardNum\": 1234567890123456, \"amount\": -100}}";
+
+        // Send the request
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .post("/analyzeTransaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        // Extract the response body and assert its contents
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertTrue(responseBody.contains("Transaction amount must be greater than or equal to 0"));
+    }
+
 
     private TransactionAnalysisResponse sendRequestAndGetResponse()
             throws Exception, JsonProcessingException, UnsupportedEncodingException, JsonMappingException {
