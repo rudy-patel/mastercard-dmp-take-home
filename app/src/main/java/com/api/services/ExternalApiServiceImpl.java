@@ -20,11 +20,11 @@ public class ExternalApiServiceImpl implements ExternalApiService {
 
     @Override
     public List<Integer> fetchCardUsageCounts(long cardNum) {
-        System.out.println("externalApiService: entry");
+        System.out.println("fetchCardUsageCounts: entry");
         List<Integer> cardUsageCounts = new ArrayList<>();
 
         try {
-            System.out.println("externalApiService: connecting to service");
+            System.out.println("fetchCardUsageCounts: fetching random value from external service");
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -39,14 +39,15 @@ public class ExternalApiServiceImpl implements ExternalApiService {
                 }
                 reader.close();
             } else {
-                System.out.println("Error: " + responseCode);
+                // TODO: maybe not sout? Handle error response
+                System.out.println("fetchCardUsageCounts: Error: " + responseCode);
             }
             connection.disconnect();
-            System.out.println("externalApiService: disconnecting from service");
+            System.out.println("fetchCardUsageCounts: disconnecting from service");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("externalApiService: returning card usage counts: " + cardUsageCounts);
+        System.out.println("fetchCardUsageCounts: returning card usage counts: " + cardUsageCounts);
         return cardUsageCounts;
     }
 }

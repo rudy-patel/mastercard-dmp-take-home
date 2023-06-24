@@ -33,7 +33,7 @@ import java.util.Collections;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("TransactionController-test")
+@ActiveProfiles("TransactionController-IntegTest")
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
 public class TransactionControllerIntegrationTest {
