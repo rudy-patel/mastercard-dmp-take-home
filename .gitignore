@@ -9,4 +9,3 @@ build
 
 # Ignore generated build directories
 app/bin/
-app/src/test/
