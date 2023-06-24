@@ -30,8 +30,9 @@ public class TransactionController {
         System.out.println("analyzeTransaction: entry");
 
         System.out.println("analyzeTransaction: parsing request");
-        final long cardNum = request.getCardNum();
-        final double amount = request.getAmount();
+        final Transaction transaction = request.getTransaction();
+        final long cardNum = transaction.getCardNum();
+        final double amount = transaction.getAmount();
 
         System.out.println("analyzeTransaction: Card num: " + cardNum);
         System.out.println("analyzeTransaction: Amount: " + amount);
