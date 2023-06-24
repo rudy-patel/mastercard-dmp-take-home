@@ -4,6 +4,7 @@ import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
 import com.api.services.ExternalApiService;
+import com.api.services.ExternalApiServiceImpl;
 import com.configuration.TestConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -65,12 +66,13 @@ public class TransactionControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private ExternalApiService testExternalApiService;
+    @Mock
+    private ExternalApiService externalApiService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        externalApiService = mock(ExternalApiServiceImpl.class);
         
         request = new TransactionRequest();
         objectMapper = new ObjectMapper();
@@ -79,7 +81,7 @@ public class TransactionControllerIntegrationTest {
         request.setTransaction(transaction);
 
         // Set the mock implementation of ExternalApiService
-        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+        when(externalApiService.fetchCardUsageCounts(CARD_NUM))
         .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
     }
 
@@ -118,13 +120,15 @@ public class TransactionControllerIntegrationTest {
         int cardUsageTooLow = 30;
 
         // Configure the mock behavior
-        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+        when(externalApiService.fetchCardUsageCounts(CARD_NUM))
                 .thenReturn(Collections.singletonList(cardUsageTooLow));
 
         // Send the request
         TransactionAnalysisResponse response = sendRequestAndGetResponse();
 
         // Validate the response
+        assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
+        assertEquals(VALID_AMOUNT, response.getTransactionAmount());
         assertEquals(DECLINED, response.getTransactionStatus());
     }
 
@@ -135,13 +139,16 @@ public class TransactionControllerIntegrationTest {
         int cardUsageTooHigh = 70;
 
         // Configure the mock behavior
-        when(testExternalApiService.fetchCardUsageCounts(anyLong()))
+        when(externalApiService.fetchCardUsageCounts(CARD_NUM))
                 .thenReturn(Collections.singletonList(cardUsageTooHigh));
+        // doReturn(Collections.singletonList(cardUsageTooHigh)).when(externalApiService.fetchCardUsageCounts(CARD_NUM));
 
         // Send the request
         TransactionAnalysisResponse response = sendRequestAndGetResponse();
 
         // Validate the response
+        assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
+        assertEquals(VALID_AMOUNT, response.getTransactionAmount());
         assertEquals(DECLINED, response.getTransactionStatus());
     }
 
@@ -157,6 +164,7 @@ public class TransactionControllerIntegrationTest {
         // Extract the response body and assert its contents
         String responseBody = mvcResult.getResponse().getContentAsString();
         TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
+        
         return response;
     }
 }

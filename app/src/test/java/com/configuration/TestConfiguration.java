@@ -15,8 +15,8 @@ public class TestConfiguration {
         return new ObjectMapper();
     }
 
-    @Bean
-    public ExternalApiService testExternalApiService() {
-        return Mockito.mock(ExternalApiService.class);
-    }
+    // @Bean
+    // public ExternalApiService testExternalApiService() {
+    //     return Mockito.mock(ExternalApiService.class);
+    // }
 }
