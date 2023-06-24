@@ -64,7 +64,7 @@ tasks.withType<JacocoReport> {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
-                exclude("**ExternalApiServiceImpl.class")
+                exclude("**/ExternalApiServiceImpl.class")
             }
         }))
     }
@@ -74,7 +74,7 @@ tasks.withType<JacocoCoverageVerification> {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
-                exclude("**ExternalApiServiceImpl.class")
+                exclude("**/ExternalApiServiceImpl.class")
             }
         }))
     }

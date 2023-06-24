@@ -37,7 +37,7 @@ public class TransactionAnalysisServiceImpl implements TransactionAnalysisServic
         return response;
     }
 
-    private String obfuscateCardNumber(long cardNum) {
+    String obfuscateCardNumber(long cardNum) {
         String cardNumber = String.valueOf(cardNum);
         if (cardNumber.length() > 12) {
             cardNumber = cardNumber.substring(0, 4) + "********" + cardNumber.substring(cardNumber.length() - 4);

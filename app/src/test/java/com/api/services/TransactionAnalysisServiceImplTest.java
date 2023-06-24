@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -113,5 +112,31 @@ public class TransactionAnalysisServiceImplTest {
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(2000.0, response.getTransactionAmount());
         assertEquals(30, response.getCardUsageCount());
+    }
+
+    @Test
+    public void testObfuscateCardNumber_LongCardNumber_ReturnsObfuscatedCardNumber() {
+        // Arrange
+        TransactionAnalysisServiceImpl transactionAnalysisService = new TransactionAnalysisServiceImpl();
+        long cardNumber = 1234567890123456L;
+
+        // Act
+        String obfuscatedCardNumber = transactionAnalysisService.obfuscateCardNumber(cardNumber);
+
+        // Assert
+        assertEquals("1234********3456", obfuscatedCardNumber);
+    }
+
+    @Test
+    public void testObfuscateCardNumber_ShortCardNumber_ReturnsObfuscatedCardNumber() {
+        // Arrange
+        TransactionAnalysisServiceImpl transactionAnalysisService = new TransactionAnalysisServiceImpl();
+        long cardNumber = 123456789L;
+
+        // Act
+        String obfuscatedCardNumber = transactionAnalysisService.obfuscateCardNumber(cardNumber);
+
+        // Assert
+        assertEquals("123456789", obfuscatedCardNumber);
     }
 }
