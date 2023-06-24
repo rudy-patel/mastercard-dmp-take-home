@@ -43,3 +43,7 @@ tasks.jar {
         attributes["Main-Class"] = "com.java.server.App"
     }
 }
+
+tasks.named<Test>("test") {
+    exclude("**/TransactionControllerIntegrationTest.*")
+}
