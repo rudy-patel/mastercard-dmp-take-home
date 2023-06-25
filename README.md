@@ -1,4 +1,5 @@
-# mastercard-dmp-take-home
+# Simple fraud detection service
+
 
 ### TODO
 * Unit test `ExternalApiServiceImpl`
@@ -60,6 +61,12 @@ This command will run the Gatling load test script and generate the load on the 
 
 4. Once the load test is completed, you can find the detailed test reports in the `build/gatling-results` directory.
 
+
+### Assumptions
+* This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\)in both the API response and logs.
+
+### Improvements
+* We can use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc.
 
 ### Resources
 * [Load testing with Gatling](https://www.blazemeter.com/blog/api-load-testing#why)
