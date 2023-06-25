@@ -3,7 +3,7 @@
 ### TODO
 * Unit test `ExternalApiServiceImpl`
 
-# Test Coverage Instructions
+### Test Coverage Instructions
 
 To view the test coverage report for the project, follow the steps below:
 
@@ -15,22 +15,22 @@ To view the test coverage report for the project, follow the steps below:
 
 That's it! You can now explore the test coverage report to gain insights into the coverage of your tests.
 
-## Load Testing
+### Load Testing
 
 To perform a load test on the `analyzeTransaction` API, follow these steps:
 
-### Prerequisites
+##### Prerequisites
 
 1. Make sure you have Java Development Kit (JDK) installed on your machine.
 2. Clone the project repository from GitHub
 
-### Set up and Run the Server
+#### Set up and Run the Server
 
 1. Open a terminal and navigate to the project root directory.
 2. Run the following command to start the server locally: `./gradlew bootRun`
 This will start the server on `http://localhost:8080`. Keep the server running while performing the load test.
 
-### Running the Load Test
+#### Running the Load Test
 
 1. Open a new terminal window and navigate to the project root directory.
 2. Run the following command to execute the load test: `./gradlew loadTest`
