@@ -4,6 +4,7 @@ import com.api.models.MonitoringStats;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
+import com.api.models.TransactionStatus;
 import com.api.services.ExternalApiService;
 import com.api.services.TransactionAnalysisService;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ public class TransactionControllerTest {
         when(externalApiService.fetchCardUsageCounts(anyLong())).thenReturn(cardUsageCounts);
 
         TransactionAnalysisResponse analysisResponse = new TransactionAnalysisResponse();
-        analysisResponse.setTransactionStatus("Approved");
+        analysisResponse.setTransactionStatus(TransactionStatus.APPROVED);
         when(transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts)).thenReturn(analysisResponse);
 
         // Act
@@ -62,7 +63,7 @@ public class TransactionControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         TransactionAnalysisResponse response = responseEntity.getBody();
-        assertEquals("Approved", response.getTransactionStatus());
+        assertEquals(TransactionStatus.APPROVED, response.getTransactionStatus());
         verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
         verify(transactionAnalysisService, times(1)).analyzeTransaction(transaction, cardUsageCounts);
     }
@@ -80,7 +81,7 @@ public class TransactionControllerTest {
         when(externalApiService.fetchCardUsageCounts(anyLong())).thenReturn(cardUsageCounts);
 
         TransactionAnalysisResponse analysisResponse = new TransactionAnalysisResponse();
-        analysisResponse.setTransactionStatus("Declined");
+        analysisResponse.setTransactionStatus(TransactionStatus.DECLINED);
         when(transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts)).thenReturn(analysisResponse);
 
         // Act
@@ -89,7 +90,7 @@ public class TransactionControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         TransactionAnalysisResponse response = responseEntity.getBody();
-        assertEquals("Declined", response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
         verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
         verify(transactionAnalysisService, times(1)).analyzeTransaction(transaction, cardUsageCounts);
     }

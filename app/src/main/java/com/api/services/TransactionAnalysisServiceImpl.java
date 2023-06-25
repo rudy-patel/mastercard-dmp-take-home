@@ -2,6 +2,7 @@ package com.api.services;
 
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
+import com.api.models.TransactionStatus;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class TransactionAnalysisServiceImpl implements TransactionAnalysisServic
             isFraudulent = true;
         }
 
-        String transactionStatus = isFraudulent ? "Declined" : "Approved";
+        TransactionStatus transactionStatus = isFraudulent ? TransactionStatus.DECLINED : TransactionStatus.APPROVED;
 
         TransactionAnalysisResponse response = new TransactionAnalysisResponse();
         response.setCardNumber(obfuscateCardNumber(transaction.getCardNum()));

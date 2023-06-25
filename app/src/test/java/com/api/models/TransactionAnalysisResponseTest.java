@@ -11,7 +11,6 @@ public class TransactionAnalysisResponseTest {
         // Arrange
         String cardNumber = "1234567890123456";
         double transactionAmount = 100.0;
-        String transactionStatus = "Success";
         int cardUsageCount = 5;
 
         TransactionAnalysisResponse response = new TransactionAnalysisResponse();
@@ -19,13 +18,13 @@ public class TransactionAnalysisResponseTest {
         // Act
         response.setCardNumber(cardNumber);
         response.setTransactionAmount(transactionAmount);
-        response.setTransactionStatus(transactionStatus);
+        response.setTransactionStatus(TransactionStatus.APPROVED);
         response.setCardUsageCount(cardUsageCount);
 
         // Assert
         assertEquals(cardNumber, response.getCardNumber());
         assertEquals(transactionAmount, response.getTransactionAmount());
-        assertEquals(transactionStatus, response.getTransactionStatus());
+        assertEquals(TransactionStatus.APPROVED, response.getTransactionStatus());
         assertEquals(cardUsageCount, response.getCardUsageCount());
     }
 }

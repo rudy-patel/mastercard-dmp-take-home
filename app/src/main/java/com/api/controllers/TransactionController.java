@@ -4,6 +4,7 @@ import com.api.models.MonitoringStats;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
+import com.api.models.TransactionStatus;
 import com.api.services.ExternalApiService;
 import com.api.services.TransactionAnalysisService;
 
@@ -77,7 +78,7 @@ public class TransactionController {
 
         // Add the transaction amount to the total transaction amount
         totalTransactionAmount += transaction.getAmount();
-        if (response.getTransactionStatus().equals("Approved")) {
+        if (response.getTransactionStatus().equals(TransactionStatus.APPROVED)) {
             approvedTransactionCount += 1;
         }
 

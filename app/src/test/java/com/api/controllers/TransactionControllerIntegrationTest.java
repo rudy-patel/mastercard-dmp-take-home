@@ -4,6 +4,7 @@ import com.api.models.MonitoringStats;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
+import com.api.models.TransactionStatus;
 import com.api.services.ExternalApiService;
 import com.configuration.TestConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,8 +48,6 @@ public class TransactionControllerIntegrationTest {
     private static final int VALID_AMOUNT = 5000;
     private static final double AMOUNT_OVER_LIMIT = 50000.1;
     private static final Integer VALID_CARD_USAGE_COUNT = 40;
-    private static final String DECLINED = "Declined";
-    private static final String APPROVED = "Approved";
     private static final long CARD_NUM = 5206840000000001L;
     private static final String OBFUSCATED_CARD_NUM = "5206********0001";
     
@@ -111,7 +110,7 @@ public class TransactionControllerIntegrationTest {
         // Validate the response
         assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
         assertEquals(VALID_AMOUNT, response.getTransactionAmount());
-        assertEquals(APPROVED, response.getTransactionStatus());
+        assertEquals(TransactionStatus.APPROVED, response.getTransactionStatus());
     }
 
     @Test
@@ -125,7 +124,7 @@ public class TransactionControllerIntegrationTest {
         // Validate the response
         assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
         assertEquals(AMOUNT_OVER_LIMIT, response.getTransactionAmount());
-        assertEquals(DECLINED, response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
     }
 
     @Test
@@ -144,7 +143,7 @@ public class TransactionControllerIntegrationTest {
         // Validate the response
         assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
         assertEquals(VALID_AMOUNT, response.getTransactionAmount());
-        assertEquals(DECLINED, response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
     }
 
     @Test
@@ -163,7 +162,7 @@ public class TransactionControllerIntegrationTest {
         // Validate the response
         assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
         assertEquals(VALID_AMOUNT, response.getTransactionAmount());
-        assertEquals(DECLINED, response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
     }
 
     @Test
@@ -215,23 +214,6 @@ public class TransactionControllerIntegrationTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertTrue(responseBody.contains("Transaction amount must be greater than or equal to 0"));
     }
-
-
-    // private TransactionAnalysisResponse sendRequestAndGetResponse()
-    //         throws Exception, JsonProcessingException, UnsupportedEncodingException, JsonMappingException {
-    //     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-    //             .post("/analyzeTransaction")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(request)))
-    //             .andExpect(MockMvcResultMatchers.status().isOk())
-    //             .andReturn();
-
-    //     // Extract the response body and assert its contents
-    //     String responseBody = mvcResult.getResponse().getContentAsString();
-    //     TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
-        
-    //     return response;
-    // }
 
     @Test
     public void testAnalyzeTransaction_externalApiServiceUnavailable_internalServerError() throws Exception {
@@ -300,6 +282,6 @@ public class TransactionControllerIntegrationTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
         MonitoringStats monitoringStats = objectMapper.readValue(responseBody, MonitoringStats.class);
         assertEquals(expectedTransactionCount, monitoringStats.getTransactionCount());
-        assertEquals(expectedTotalTransactionAmount, monitoringStats.getTotalTransactionAmount(), 0.01);
+        assertEquals(expectedTotalTransactionAmount, monitoringStats.getTotalTransactionAmount());
     }
 }

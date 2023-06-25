@@ -6,7 +6,7 @@ package com.api.models;
 public class TransactionAnalysisResponse {
     private String cardNumber;
     private double transactionAmount;
-    private String transactionStatus;
+    private TransactionStatus transactionStatus;
     private int cardUsageCount;
 
     /**
@@ -55,7 +55,7 @@ public class TransactionAnalysisResponse {
      *
      * @return The transaction status.
      */
-    public String getTransactionStatus() {
+    public TransactionStatus getTransactionStatus() {
         return transactionStatus;
     }
 
@@ -64,7 +64,7 @@ public class TransactionAnalysisResponse {
      *
      * @param transactionStatus The transaction status to set.
      */
-    public void setTransactionStatus(String transactionStatus) {
+    public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
 

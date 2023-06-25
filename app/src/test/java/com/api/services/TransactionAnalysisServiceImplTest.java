@@ -2,6 +2,8 @@ package com.api.services;
 
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
+import com.api.models.TransactionStatus;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +34,7 @@ public class TransactionAnalysisServiceImplTest {
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
         // Assert
-        assertEquals("Approved", response.getTransactionStatus());
+        assertEquals(TransactionStatus.APPROVED, response.getTransactionStatus());
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(100.0, response.getTransactionAmount());
         assertEquals(35, response.getCardUsageCount());
@@ -51,7 +53,7 @@ public class TransactionAnalysisServiceImplTest {
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
         // Assert
-        assertEquals("Declined", response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(60000.0, response.getTransactionAmount());
         assertEquals(95, response.getCardUsageCount());
@@ -70,7 +72,7 @@ public class TransactionAnalysisServiceImplTest {
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
         // Assert
-        assertEquals("Declined", response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(100.0, response.getTransactionAmount());
         assertEquals(155, response.getCardUsageCount());
@@ -89,7 +91,7 @@ public class TransactionAnalysisServiceImplTest {
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
         // Assert
-        assertEquals("Declined", response.getTransactionStatus());
+        assertEquals(TransactionStatus.DECLINED, response.getTransactionStatus());
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(9000.0, response.getTransactionAmount());
         assertEquals(2, response.getCardUsageCount());
@@ -108,7 +110,7 @@ public class TransactionAnalysisServiceImplTest {
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
         // Assert
-        assertEquals("Approved", response.getTransactionStatus());
+        assertEquals(TransactionStatus.APPROVED, response.getTransactionStatus());
         assertEquals("1234********3456", response.getCardNumber());
         assertEquals(2000.0, response.getTransactionAmount());
         assertEquals(30, response.getCardUsageCount());
