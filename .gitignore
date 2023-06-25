@@ -9,3 +9,6 @@ build
 
 # Ignore generated build directories
 app/bin/
+
+# Ignore compiled Java class files
+*.class
