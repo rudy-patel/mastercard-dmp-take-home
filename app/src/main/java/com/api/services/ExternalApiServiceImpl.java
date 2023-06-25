@@ -8,10 +8,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.ServiceUnavailableException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ExternalApiServiceImpl implements ExternalApiService {
+    private static final Logger logger = LoggerFactory.getLogger(ExternalApiServiceImpl.class);
+
     private final String apiUrl;
 
     public ExternalApiServiceImpl() {
@@ -19,12 +25,11 @@ public class ExternalApiServiceImpl implements ExternalApiService {
     }
 
     @Override
-    public List<Integer> fetchCardUsageCounts(long cardNum) {
-        System.out.println("fetchCardUsageCounts: entry");
+    public List<Integer> fetchCardUsageCounts(long cardNum) throws IOException, ServiceUnavailableException {
         List<Integer> cardUsageCounts = new ArrayList<>();
 
         try {
-            System.out.println("fetchCardUsageCounts: fetching random value from external service");
+            logger.debug("Fetching card usage counts from external service");
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -39,15 +44,18 @@ public class ExternalApiServiceImpl implements ExternalApiService {
                 }
                 reader.close();
             } else {
-                // TODO: maybe not sout? Handle error response
-                System.out.println("fetchCardUsageCounts: Error: " + responseCode);
+                String errorMessage = "Unable to make request to external service";
+                ServiceUnavailableException e = new ServiceUnavailableException(errorMessage);
+                logger.error(e.getMessage(), e);
+                throw e;
             }
             connection.disconnect();
-            System.out.println("fetchCardUsageCounts: disconnecting from service");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error occurred while making a request to external service. URL: {}", apiUrl, e);
+            throw e;
         }
-        System.out.println("fetchCardUsageCounts: returning card usage counts: " + cardUsageCounts);
+
+        logger.debug("Finished fetching card usage counts: {}", cardUsageCounts);
         return cardUsageCounts;
     }
 }

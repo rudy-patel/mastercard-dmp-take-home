@@ -28,8 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
+
+import javax.naming.ServiceUnavailableException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,7 +61,7 @@ public class TransactionControllerIntegrationTest {
     private ExternalApiService externalApiService;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ServiceUnavailableException, IOException {
         request = new TransactionRequest();
         objectMapper = new ObjectMapper();
         transaction = new Transaction();
@@ -190,6 +193,52 @@ public class TransactionControllerIntegrationTest {
         assertTrue(responseBody.contains("Transaction amount must be greater than or equal to 0"));
     }
 
+
+    // private TransactionAnalysisResponse sendRequestAndGetResponse()
+    //         throws Exception, JsonProcessingException, UnsupportedEncodingException, JsonMappingException {
+    //     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+    //             .post("/analyzeTransaction")
+    //             .contentType(MediaType.APPLICATION_JSON)
+    //             .content(objectMapper.writeValueAsString(request)))
+    //             .andExpect(MockMvcResultMatchers.status().isOk())
+    //             .andReturn();
+
+    //     // Extract the response body and assert its contents
+    //     String responseBody = mvcResult.getResponse().getContentAsString();
+    //     TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
+        
+    //     return response;
+    // }
+
+    @Test
+    public void testAnalyzeTransaction_externalApiServiceUnavailable_internalServerError() throws Exception {
+        // Prepare the request payload
+        transaction.setAmount(VALID_AMOUNT);
+
+        // Configure the mock behavior
+        when(externalApiService.fetchCardUsageCounts(CARD_NUM)).thenThrow(ServiceUnavailableException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/analyzeTransaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andReturn();
+    }
+
+    @Test
+    public void testAnalyzeTransaction_jsonProcessingException_badRequest() throws Exception {
+        // Prepare the request payload with invalid JSON
+        String requestBody = "{";
+
+        // Send the request and ensure bad request
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/analyzeTransaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+    }
 
     private TransactionAnalysisResponse sendRequestAndGetResponse()
             throws Exception, JsonProcessingException, UnsupportedEncodingException, JsonMappingException {

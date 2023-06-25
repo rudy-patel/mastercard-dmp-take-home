@@ -21,7 +21,9 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.apache.httpcomponents:httpclient")
     implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.11.1")
-    implementation("org.slf4j:slf4j-api")
+    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation("ch.qos.logback:logback-classic:1.2.6")
+
 
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")

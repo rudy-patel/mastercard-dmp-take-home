@@ -12,10 +12,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.naming.ServiceUnavailableException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class TransactionControllerTest {
@@ -35,7 +40,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void testAnalyzeTransaction_WithValidTransaction_ReturnsApprovedResponse() {
+    public void testAnalyzeTransaction_WithValidTransaction_ReturnsApprovedResponse() throws ServiceUnavailableException, IOException {
         // Arrange
         TransactionRequest request = new TransactionRequest();
         Transaction transaction = new Transaction();
@@ -62,7 +67,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void testAnalyzeTransaction_WithFraudulentTransaction_ReturnsDeclinedResponse() {
+    public void testAnalyzeTransaction_WithFraudulentTransaction_ReturnsDeclinedResponse() throws ServiceUnavailableException, IOException {
         // Arrange
         TransactionRequest request = new TransactionRequest();
         Transaction transaction = new Transaction();
@@ -86,5 +91,45 @@ public class TransactionControllerTest {
         assertEquals("Declined", response.getTransactionStatus());
         verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
         verify(transactionAnalysisService, times(1)).analyzeTransaction(transaction, cardUsageCounts);
+    }
+
+    @Test
+    public void testAnalyzeTransaction_externalApiServiceThrowsException_internalServerError() throws ServiceUnavailableException, IOException {
+        // Arrange
+        TransactionRequest request = new TransactionRequest();
+        Transaction transaction = new Transaction();
+        transaction.setCardNum(1234567890123456L);
+        transaction.setAmount(100.0);
+        request.setTransaction(transaction);
+
+        when(externalApiService.fetchCardUsageCounts(anyLong())).thenThrow(ServiceUnavailableException.class);
+
+        // Act
+        ResponseEntity<TransactionAnalysisResponse> responseEntity = transactionController.analyzeTransaction(request);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
+        verify(transactionAnalysisService, never()).analyzeTransaction(any(Transaction.class), any(List.class));
+    }
+
+    @Test
+    public void testAnalyzeTransaction_externalApiServiceThrowsIOException_internalServerError() throws ServiceUnavailableException, IOException {
+        // Arrange
+        TransactionRequest request = new TransactionRequest();
+        Transaction transaction = new Transaction();
+        transaction.setCardNum(1234567890123456L);
+        transaction.setAmount(100.0);
+        request.setTransaction(transaction);
+
+        when(externalApiService.fetchCardUsageCounts(anyLong())).thenThrow(IOException.class);
+
+        // Act
+        ResponseEntity<TransactionAnalysisResponse> responseEntity = transactionController.analyzeTransaction(request);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
+        verify(transactionAnalysisService, never()).analyzeTransaction(any(Transaction.class), any(List.class));
     }
 }
