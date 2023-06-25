@@ -1,5 +1,13 @@
 # Simple Fraud Detection Service
+This is a proof of concept **API** that functions as a simple credit card fraud detection service. Given a transaction which includes the card number and transasction amount, it determines if that transaction is fraudulent.
 
+The criteria for determining a fradulent transaction:
+* If the amount of a transaction is over $50,000.00 decline the transaction.
+* If the card has been used over 60 times in the last 7 days, decline the transaction.
+* If the card has been used under 35 times in the last 7 days, decline the transaction if the (transaction
+amount/times used in last 7 days) > 500. (E.g. Decline if transaction amount is $9000 and the card has
+been used 2 times in the last 7 days. 9000/2 = 4500)
+* Approve all other transactions.
 
 ### Running the Server
 To run the Spring Boot server locally, follow these steps:
