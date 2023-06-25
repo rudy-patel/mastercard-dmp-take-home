@@ -149,10 +149,19 @@ Once you have opened the main page of the generated documentation in your web br
 
 
 ### Assumptions
-* This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\)in both the API response and logs.
+* This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\) in both the API response and logs.
+* This service also assumes that the external service (random.org) is available to serve requests.
 
 ### Improvements
-* We can use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc.
+* Use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc.
+* Use the Dockerfile to work on deploying this to a **Kubernetes** cluster.
+* Implement necessary **security measures** such as authentication, authorization, and secure communication (e.g., HTTPS) to protect sensitive data and prevent unauthorized access.
+* Implement **caching** mechanisms for frequently accessed data to improve performance and reduce unnecessary external API calls or expensive computations.
+* Implement **rate limiting** to prevent abuse or excessive usage of the API by individual clients, ensuring fair and efficient resource allocation.
+* Implement a robust **CI/CD** (Continuous Integration/Continuous Deployment) pipeline to automate build, testing, and deployment processes, ensuring smooth delivery of updates and minimizing manual errors.
+* Design the architecture in a scalable manner to handle increased traffic and growing user base. Consider technologies like load balancing, horizontal scaling, and cloud infrastructure to achieve scalability.
+* If the API evolves over time, consider implementing **versioning** to ensure backward compatibility and provide a smooth transition for existing clients.
+* Since the API handles sensitive data and operates in regulated industries, ensure **compliance** with relevant standards and regulations such as GDPR, HIPAA, PCI-DSS, etc.
 
 ### Resources
 * [Load testing with Gatling](https://www.blazemeter.com/blog/api-load-testing#why)
