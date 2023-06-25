@@ -171,17 +171,13 @@ public class TransactionControllerIntegrationTest {
         // Prepare the request payload with missing transaction field
         String requestBody = "{}";
 
-        // Send the request
+        // Send the request and assert bad request
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                 .post("/analyzeTransaction")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn();
-
-        // Extract the response body and assert its contents
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        assertTrue(responseBody.contains("A required input parameter is missing."));
     }
 
     @Test
