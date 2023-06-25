@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -78,6 +79,26 @@ public class TransactionControllerIntegrationTest {
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
         .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
     }
+
+    @Test
+    @Disabled("Skipping setup for this test")
+    public void testAnalyzeTransaction_fullEndToEndWorkflow() throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException, Exception {
+        request = new TransactionRequest();
+        objectMapper = new ObjectMapper();
+        transaction = new Transaction();
+        
+        // Prepare the request payload
+        request.setTransaction(transaction);
+        transaction.setCardNum(CARD_NUM);
+        transaction.setAmount(VALID_AMOUNT);
+
+        // Send the request
+        TransactionAnalysisResponse response = sendRequestAndGetResponse();
+
+        // Validate the response
+        assertEquals(OBFUSCATED_CARD_NUM, response.getCardNumber());
+        assertEquals(VALID_AMOUNT, response.getTransactionAmount());
+}
 
     @Test
     public void testAnalyzeTransaction_happyCase_TransactionSuccessful() throws Exception {
