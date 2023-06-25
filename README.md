@@ -1,11 +1,76 @@
-# Simple fraud detection service
+# Simple Fraud Detection Service
 
 
-### TODO
-* Unit test `ExternalApiServiceImpl`
+### Running the Server
+To run the Spring Boot server locally, follow these steps:
 
-### Test Coverage Instructions
+1. Make sure you have Java Development Kit (JDK) installed on your machine.
 
+2. Clone the project repository from GitHub.
+
+3. Open a terminal and navigate to the project root directory.
+
+4. Run the following command to build the project: `./gradlew build`.
+
+5. Once the build is successful, run the following command to start the server locally: `./gradlew bootRun`.
+This will start the server on `http://localhost:8080`.
+
+### APIs
+#### Analyze Transaction
+Analyzes a transaction and returns the analysis response.
+
+**Endpoint**: `POST /analyzeTransaction`
+
+**Request Body**:
+```
+{
+  "transaction": {
+    "cardNum": 5206840000000001,
+    "amount": 100.0,
+  }
+}
+```
+
+**Example Request**:
+```
+curl -X POST -H "Content-Type: application/json" -d '{
+  "transaction": {
+    "cardNum": 5206840000000001,
+    "amount": 399.99
+  }
+}' http://localhost:8080/analyzeTransaction
+```
+
+**Example Response**:
+
+```
+{
+    "cardNumber":"5206********0001",
+    "transactionAmount":399.99,
+    "transactionStatus":"APPROVED",
+    "cardUsageCount":30
+}
+```
+
+#### Get Monitoring Statistics
+Retrieves the monitoring statistics.
+
+**Endpoint**: `GET /monitoringStats`
+
+**Example Request**:
+```
+curl -X GET http://localhost:8080/monitoringStats
+```
+Example Response:
+```
+{
+    "transactionCount":1,
+    "totalTransactionAmount":0.0,
+    "percentageApproved":0.0
+}
+```
+
+### Test Coverage
 To view the test coverage report for the project, follow the steps below:
 
 1. Ensure that the project has been built and the tests have been executed.
