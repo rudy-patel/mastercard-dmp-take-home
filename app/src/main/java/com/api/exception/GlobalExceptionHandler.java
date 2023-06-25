@@ -7,9 +7,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Global exception handler for handling and processing exceptions across the application.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles the MethodArgumentNotValidException thrown when request validation fails.
+     *
+     * @param ex The MethodArgumentNotValidException instance.
+     * @return A ResponseEntity with a bad request status and error message.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
@@ -17,6 +26,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
+    /**
+     * Handles the NullPointerException thrown when a required input parameter is missing.
+     *
+     * @param ex The NullPointerException instance.
+     * @return A ResponseEntity with a bad request status and error message.
+     */
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {

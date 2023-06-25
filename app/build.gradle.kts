@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "1.5.31"
     id("jacoco")
     id("scala")
+    id("org.jetbrains.dokka") version "1.4.32"
 }
 
 group = "com"

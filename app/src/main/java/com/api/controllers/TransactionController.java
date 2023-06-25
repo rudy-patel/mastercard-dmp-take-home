@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller class for handling transaction-related requests.
+ */
 @RestController
 @Validated
 public class TransactionController {
@@ -44,6 +47,12 @@ public class TransactionController {
         this.externalApiService = externalApiService;
     }
 
+    /**
+     * Analyzes a transaction and returns the analysis response.
+     *
+     * @param request The transaction request.
+     * @return The analysis response.
+     */
     @PostMapping("/analyzeTransaction")
     public ResponseEntity<TransactionAnalysisResponse> analyzeTransaction(
             @Valid @RequestBody TransactionRequest request) {
@@ -75,17 +84,21 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
-    // Add a new endpoint to retrieve the monitoring stats
+    /**
+     * Retrieves the monitoring statistics.
+     *
+     * @return The monitoring statistics.
+     */
     @GetMapping("/monitoringStats")
     public ResponseEntity<MonitoringStats> getMonitoringStats() {
         MonitoringStats stats = new MonitoringStats();
 
-         // Calculate the percentage of approved transactions
+        // Calculate the percentage of approved transactions
         double percentageApproved = 0.0;
         if (transactionCount > 0) {
             percentageApproved = (double) approvedTransactionCount / transactionCount * 100;
         }
-        
+
         stats.setPercentageApproved(percentageApproved);
         stats.setTransactionCount(transactionCount);
         stats.setTotalTransactionAmount(totalTransactionAmount);
@@ -93,14 +106,29 @@ public class TransactionController {
         return ResponseEntity.ok(stats);
     }
 
+    /**
+     * Sets the transaction count.
+     *
+     * @param transactionCount The transaction count to set.
+     */
     public void setTransactionCount(int transactionCount) {
         this.transactionCount = transactionCount;
     }
 
+    /**
+     * Sets the total transaction amount.
+     *
+     * @param totalTransactionAmount The total transaction amount to set.
+     */
     public void setTotalTransactionAmount(double totalTransactionAmount) {
         this.totalTransactionAmount = totalTransactionAmount;
     }
 
+    /**
+     * Sets the approved transaction count.
+     *
+     * @param approvedTransactionCount The approved transaction count to set.
+     */
     public void setApprovedTransactionCount(int approvedTransactionCount) {
         this.approvedTransactionCount = approvedTransactionCount;
     }

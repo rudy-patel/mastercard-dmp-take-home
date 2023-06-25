@@ -15,16 +15,30 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
+/**
+ * Implementation of the ExternalApiService interface that fetches card usage counts from an external API.
+ */
 public class ExternalApiServiceImpl implements ExternalApiService {
     private static final Logger logger = LoggerFactory.getLogger(ExternalApiServiceImpl.class);
 
     private final String apiUrl;
 
+    /**
+     * Constructs a new instance of ExternalApiServiceImpl.
+     */
     public ExternalApiServiceImpl() {
         this.apiUrl = "https://www.random.org/integers/?num=7&min=0&max=12&col=1&base=10&format=plain&rnd=new";
     }
 
     @Override
+    /**
+     * Fetches the card usage counts for a given card number from the external API.
+     *
+     * @param cardNum The card number for which to fetch the card usage counts.
+     * @return A list of card usage counts.
+     * @throws IOException                 If an error occurs while making the request to the external API.
+     * @throws ServiceUnavailableException If the external API service is unavailable.
+     */
     public List<Integer> fetchCardUsageCounts(long cardNum) throws IOException, ServiceUnavailableException {
         List<Integer> cardUsageCounts = new ArrayList<>();
 

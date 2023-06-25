@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service implementation for analyzing a transaction.
+ */
 @Service
 public class TransactionAnalysisServiceImpl implements TransactionAnalysisService {
 
@@ -45,6 +48,12 @@ public class TransactionAnalysisServiceImpl implements TransactionAnalysisServic
         return response;
     }
 
+    /**
+     * Obfuscates the card number for privacy.
+     *
+     * @param cardNum The card number to obfuscate.
+     * @return The obfuscated card number.
+     */
     String obfuscateCardNumber(long cardNum) {
         String cardNumber = String.valueOf(cardNum);
         if (cardNumber.length() > 12) {

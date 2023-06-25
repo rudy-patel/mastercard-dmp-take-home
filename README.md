@@ -61,6 +61,25 @@ This command will run the Gatling load test script and generate the load on the 
 
 4. Once the load test is completed, you can find the detailed test reports in the `build/gatling-results` directory.
 
+### Documentation
+
+The documentation for this project is generated using Dokka and provides detailed information about the codebase.
+
+#### Accessing the Documentation
+
+To access the documentation, follow these steps:
+
+
+1. Navigate to the project's root directory
+2. Generate the documentation by running the following Gradle command: `./gradlew dokkaHtml`
+3. After the command completes, open the generated documentation by opening the following file in your web browser: `build/dokka/html/index.html`
+
+This will open the main page of the generated documentation.
+
+#### Browsing the Documentation
+
+Once you have opened the main page of the generated documentation in your web browser, you can navigate through the different sections to explore the codebase's documentation.
+
 
 ### Assumptions
 * This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\)in both the API response and logs.
