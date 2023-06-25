@@ -1,5 +1,6 @@
 package com.api.controllers;
 
+import com.api.models.MonitoringStats;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
@@ -8,6 +9,7 @@ import com.configuration.TestConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -59,6 +62,9 @@ public class TransactionControllerIntegrationTest {
 
     @MockBean
     private ExternalApiService externalApiService;
+
+    @Autowired
+    private TransactionController transactionController;
 
     @Before
     public void setUp() throws ServiceUnavailableException, IOException {
@@ -254,5 +260,29 @@ public class TransactionControllerIntegrationTest {
         TransactionAnalysisResponse response = objectMapper.readValue(responseBody, TransactionAnalysisResponse.class);
         
         return response;
+    }
+
+    @Test
+    public void testGetMonitoringStats_ReturnsCorrectStats() throws Exception {
+        // Set up the expected monitoring stats
+        int expectedTransactionCount = 10;
+        double expectedTotalTransactionAmount = 1000.50;
+        transactionController.setTransactionCount(expectedTransactionCount);
+        transactionController.setTotalTransactionAmount(expectedTotalTransactionAmount);
+
+        // Send the request to the monitoring stats endpoint
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/monitoringStats")
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        // Verify the response status code and content
+        int statusCode = mvcResult.getResponse().getStatus();
+        assertEquals(HttpStatus.OK.value(), statusCode);
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        MonitoringStats monitoringStats = objectMapper.readValue(responseBody, MonitoringStats.class);
+        assertEquals(expectedTransactionCount, monitoringStats.getTransactionCount());
+        assertEquals(expectedTotalTransactionAmount, monitoringStats.getTotalTransactionAmount(), 0.01);
     }
 }

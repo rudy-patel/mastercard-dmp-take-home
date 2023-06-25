@@ -1,5 +1,6 @@
 package com.api.controllers;
 
+import com.api.models.MonitoringStats;
 import com.api.models.Transaction;
 import com.api.models.TransactionAnalysisResponse;
 import com.api.models.TransactionRequest;
@@ -131,5 +132,23 @@ public class TransactionControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         verify(externalApiService, times(1)).fetchCardUsageCounts(anyLong());
         verify(transactionAnalysisService, never()).analyzeTransaction(any(Transaction.class), any(List.class));
+    }
+
+    @Test
+    public void testGetMonitoringStats_ReturnsCorrectStats() {
+        // Arrange
+        transactionController.setTransactionCount(10);
+        transactionController.setTotalTransactionAmount(1000.50);
+        transactionController.setApprovedTransactionCount(8);
+
+        // Act
+        ResponseEntity<MonitoringStats> responseEntity = transactionController.getMonitoringStats();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        MonitoringStats stats = responseEntity.getBody();
+        assertEquals(10, stats.getTransactionCount());
+        assertEquals(1000.50, stats.getTotalTransactionAmount());
+        assertEquals(80.0, stats.getPercentageApproved());
     }
 }
