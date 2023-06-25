@@ -3,6 +3,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.31"
     id("jacoco")
+    id("scala")
 }
 
 group = "com"
@@ -24,7 +25,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:1.7.32")
     implementation("ch.qos.logback:logback-classic:1.2.6")
 
-
+    testImplementation("io.gatling.highcharts:gatling-charts-highcharts:3.7.0")
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testImplementation("com.github.tomakehurst:wiremock-jre8:2.31.0")
@@ -84,4 +85,19 @@ tasks.withType<JacocoCoverageVerification> {
 
 jacoco {
     toolVersion = "0.8.7"
+}
+
+tasks.register<JavaExec>("loadTest") {
+    dependsOn(tasks.named("testClasses"))
+    description = "Load Test With Gatling"
+    group = "Load Test"
+    classpath = sourceSets.named("test").get().runtimeClasspath
+    jvmArgs("-Dgatling.core.directory.binaries=${sourceSets.named("test").get().output.classesDirs.asPath}")
+    main = "io.gatling.app.Gatling"
+    args = listOf(
+        "--simulation", "BlazeMeterGatlingTest",
+        "--results-folder", "${buildDir}/gatling-results",
+        "--binaries-folder", sourceSets.named("test").get().output.classesDirs.asPath,
+        "--bodies-folder", sourceSets.named("test").get().resources.srcDirs.toList().first().toString() + "/gatling/bodies"
+    )
 }

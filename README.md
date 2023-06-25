@@ -15,4 +15,5 @@ To view the test coverage report for the project, follow the steps below:
 
 That's it! You can now explore the test coverage report to gain insights into the coverage of your tests.
 
-Happy testing!
+### Resources
+* [Load testing with Gatling](https://www.blazemeter.com/blog/api-load-testing#why)
