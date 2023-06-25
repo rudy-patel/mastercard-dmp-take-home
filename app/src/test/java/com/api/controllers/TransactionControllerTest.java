@@ -152,4 +152,22 @@ public class TransactionControllerTest {
         assertEquals(1000.50, stats.getTotalTransactionAmount());
         assertEquals(80.0, stats.getPercentageApproved());
     }
+
+    @Test
+    public void testGetMonitoringStats_WhenTransactionCountNotGreaterThanZero_ReturnsZeroPercentageApproved() {
+        // Arrange
+        transactionController.setTransactionCount(0);
+        transactionController.setTotalTransactionAmount(0.0);
+        transactionController.setApprovedTransactionCount(0);
+
+        // Act
+        ResponseEntity<MonitoringStats> responseEntity = transactionController.getMonitoringStats();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        MonitoringStats stats = responseEntity.getBody();
+        assertEquals(0, stats.getTransactionCount());
+        assertEquals(0.0, stats.getTotalTransactionAmount());
+        assertEquals(0.0, stats.getPercentageApproved());
+    }
 }
