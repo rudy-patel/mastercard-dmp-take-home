@@ -61,6 +61,8 @@ This command will run the Gatling load test script and generate the load on the 
 
 4. Once the load test is completed, you can find the detailed test reports in the `build/gatling-results` directory.
 
+**Note**: Be mindful of the number of requests you are executing in your load test! Since we call external APIs, your IP Address will be **blocked** for *24 hours* if you exceed a certain number of requests/second. See [RandomAPI FAQ](https://api.random.org/faq) for more details.
+
 ### Documentation
 
 The documentation for this project is generated using Dokka and provides detailed information about the codebase.

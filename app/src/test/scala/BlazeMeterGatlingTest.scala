@@ -7,7 +7,7 @@ class BlazeMeterGatlingTest extends Simulation {
    private val baseUrl = "http://localhost:8080"  // Update the base URL to match your API endpoint
    private val endpoint = "/analyzeTransaction"  // Update the endpoint to the one you want to test
    private val contentType = "application/json"
-   private val requestCount = 100
+   private val requestCount = 3
 
    val httpProtocol: HttpProtocolBuilder = http
      .baseUrl(baseUrl)
