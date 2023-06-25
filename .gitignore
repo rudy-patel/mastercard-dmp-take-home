@@ -4,8 +4,8 @@
 # Ignore Gradle build output directory
 build
 
-# Ignore .DS_STORE files
-**/.DS_STORE
+# Ignore .DS_Store files
+**/.DS_Store
 
 # Ignore generated build directories
 app/bin/
