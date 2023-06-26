@@ -43,12 +43,6 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "com.java.server.App"
-    }
-}
-
 tasks.named<Test>("test") {
     exclude("**/TransactionControllerIntegrationTest.*")
 
@@ -103,10 +97,16 @@ tasks.register<JavaExec>("loadTest") {
     )
 }
 
-val jarVersion: String by project
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "com.App"
-    }
-    archiveFileName.set("fraud-detection-service-$version.jar")
-}
+// tasks.jar {
+//     manifest {
+//         attributes["Main-Class"] = "com.java.server.App"
+//     }
+// }
+
+// val jarVersion: String by project
+// tasks.jar {
+//     manifest {
+//         attributes["Main-Class"] = "com.App"
+//     }
+//     archiveFileName.set("fraud-detection-service-$version.jar")
+// }
