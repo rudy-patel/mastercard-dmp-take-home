@@ -157,7 +157,7 @@ Once you have opened the main page of the generated documentation in your web br
 
 ### Assumptions
 * This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\) in both the API response and logs.
-* This service also assumes that the external service (random.org) is available to serve requests.
+* This service also assumes that the external service (random.org) is available to serve requests, and will throw an error if any external service is unavailable.
 
 ### Potential improvements
 * Use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc. Try to use popular monitoring tools for more detailed monitoring such as: Prometheus, Grafana, AWS CloudWatch, etc.
