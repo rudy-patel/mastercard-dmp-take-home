@@ -1,8 +1,8 @@
 # Simple Fraud Detection Service
-This is a proof of concept **API** that functions as a simple credit card fraud detection service. Given a transaction which includes the card number and transasction amount, it determines if that transaction is fraudulent.
+This is a proof of concept **API** that functions as a simple credit card fraud detection service. Given a transaction which includes the card number and transaction amount, it determines if that transaction is fraudulent based on a set of criteria.
 
-The criteria for determining a fradulent transaction:
-* If the amount of a transaction is over $50,000.00 decline the transaction.
+The criteria for determining a fraudulent transaction:
+* If the amount of a transaction is over $50,000.00, decline the transaction.
 * If the card has been used over 60 times in the last 7 days, decline the transaction.
 * If the card has been used under 35 times in the last 7 days, decline the transaction if the (transaction
 amount/times used in last 7 days) > 500. (E.g. Decline if transaction amount is $9000 and the card has
@@ -78,7 +78,13 @@ Example Response:
 }
 ```
 
-### Test Coverage
+### Testing
+This project includes the following tests:
+* **Unit tests** for *each* class – with test coverage!
+* **Integration tests** for the APIs in `TransactionController`
+* **Load test** for the `/analyzeTransaction` API
+
+#### Test Coverage
 To view the test coverage report for the project, follow the steps below:
 
 1. Ensure that the project has been built and the tests have been executed.
@@ -89,7 +95,7 @@ To view the test coverage report for the project, follow the steps below:
 
 That's it! You can now explore the test coverage report to gain insights into the coverage of your tests.
 
-### Load Testing
+#### Load Test
 
 To perform a load test on the `analyzeTransaction` API, follow these steps:
 
@@ -141,26 +147,19 @@ This command will run the Gatling load test script and generate the load on the 
 The documentation for this project is generated using Dokka and provides detailed information about the codebase.
 
 #### Accessing the Documentation
-
 To access the documentation, follow these steps:
-
 
 1. Navigate to the project's root directory
 2. Generate the documentation by running the following Gradle command: `./gradlew dokkaHtml`
 3. After the command completes, open the generated documentation by opening the following file in your web browser: `build/dokka/html/index.html`
 
-This will open the main page of the generated documentation.
-
-#### Browsing the Documentation
-
-Once you have opened the main page of the generated documentation in your web browser, you can navigate through the different sections to explore the codebase's documentation.
-
+Once you have opened the main page of the generated documentation in your web browser, you can navigate through the different sections to explore the codebase's documentation. 
 
 ### Assumptions
 * This project assumes that card number is **sensitive information**. Therefore, the card number is obfuscated \(52068400000000000001 becomes 5206********0001\) in both the API response and logs.
 * This service also assumes that the external service (random.org) is available to serve requests.
 
-### Improvements
+### Potential improvements
 * Use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc.
 * Use the Dockerfile to work on deploying this to a **Kubernetes** cluster.
 * Implement necessary **security measures** such as authentication, authorization, and secure communication (e.g., HTTPS) to protect sensitive data and prevent unauthorized access.

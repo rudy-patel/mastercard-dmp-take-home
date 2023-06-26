@@ -3,6 +3,8 @@ import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 
+// This is a modified implementation from: https://www.blazemeter.com/blog/api-load-testing#why
+
 class BlazeMeterGatlingTest extends Simulation {
    private val baseUrl = "http://localhost:8080"  // Update the base URL to match your API endpoint
    private val endpoint = "/analyzeTransaction"  // Update the endpoint to the one you want to test
