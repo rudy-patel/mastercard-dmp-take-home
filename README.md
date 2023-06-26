@@ -72,9 +72,9 @@ curl -X GET http://localhost:8080/monitoringStats
 Example Response:
 ```
 {
-    "transactionCount":1,
-    "totalTransactionAmount":0.0,
-    "percentageApproved":0.0
+    "transactionCount":123,
+    "totalTransactionAmount":12345.0,
+    "percentageApproved":73.5
 }
 ```
 
