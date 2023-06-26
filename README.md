@@ -160,11 +160,11 @@ Once you have opened the main page of the generated documentation in your web br
 * This service also assumes that the external service (random.org) is available to serve requests.
 
 ### Potential improvements
-* Use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc.
-* Use the Dockerfile to work on deploying this to a **Kubernetes** cluster.
+* Use *Spring actuator* to add some additional metrics related to: HTTP Requests, JVM memory, CPU usage, system load averages, etc. Try to use popular monitoring tools for more detailed monitoring such as: Prometheus, Grafana, AWS CloudWatch, etc.
+* Use the Dockerfile to deploy this to a **Kubernetes** cluster using cloud services: Build the docker image, push the docker image to a container registry, set up a Kubernetes cluster using your service of choice (i.e. Amazon EKS), create Kubernetes deployment/service manifests and apply them to the cluster.
 * Implement necessary **security measures** such as authentication, authorization, and secure communication (e.g., HTTPS) to protect sensitive data and prevent unauthorized access.
-* Implement **caching** mechanisms for frequently accessed data to improve performance and reduce unnecessary external API calls or expensive computations.
-* Implement **rate limiting** to prevent abuse or excessive usage of the API by individual clients, ensuring fair and efficient resource allocation.
+* Implement **caching** mechanisms (i.e. Redis or Memcached) for frequently accessed data to improve performance and reduce unnecessary external API calls or expensive computations.
+* Implement **rate limiting** (using a tool such as Amazon API Gateway) to prevent abuse or excessive usage of the API by individual clients, ensuring fair and efficient resource allocation.
 * Implement a robust **CI/CD** (Continuous Integration/Continuous Deployment) pipeline to automate build, testing, and deployment processes, ensuring smooth delivery of updates and minimizing manual errors.
 * Design the architecture in a scalable manner to handle increased traffic and growing user base. Consider technologies like load balancing, horizontal scaling, and cloud infrastructure to achieve scalability.
 * If the API evolves over time, consider implementing **versioning** to ensure backward compatibility and provide a smooth transition for existing clients.
