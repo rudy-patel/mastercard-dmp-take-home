@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -101,4 +101,12 @@ tasks.register<JavaExec>("loadTest") {
         "--binaries-folder", sourceSets.named("test").get().output.classesDirs.asPath,
         "--bodies-folder", sourceSets.named("test").get().resources.srcDirs.toList().first().toString() + "/gatling/bodies"
     )
+}
+
+val jarVersion: String by project
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "com.App"
+    }
+    archiveFileName.set("fraud-detection-service-$version.jar")
 }
