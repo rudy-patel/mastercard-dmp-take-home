@@ -15,7 +15,6 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleValidationException_WithMethodArgumentNotValidException_ReturnsBadRequest() {
-        // Arrange
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
         BindingResult bindingResult = mock(BindingResult.class);
         FieldError fieldError = mock(FieldError.class);
@@ -26,24 +25,19 @@ class GlobalExceptionHandlerTest {
         MethodArgumentNotValidException exception =
                 new MethodArgumentNotValidException(null, bindingResult);
 
-        // Act
         ResponseEntity<String> response = handler.handleValidationException(exception);
 
-        // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Validation error message", response.getBody());
     }
 
     @Test
     void handleNullPointerException_WithNullPointerException_ReturnsBadRequest() {
-        // Arrange
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
         NullPointerException exception = new NullPointerException();
 
-        // Act
         ResponseEntity<String> response = handler.handleNullPointerException(exception);
 
-        // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("A required input parameter is missing.", response.getBody());
     }

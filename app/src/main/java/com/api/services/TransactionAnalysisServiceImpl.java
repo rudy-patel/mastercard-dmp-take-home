@@ -16,18 +16,23 @@ import java.util.List;
 @Service
 public class TransactionAnalysisServiceImpl implements TransactionAnalysisService {
 
+    private static final double FRAUDULENT_AMOUNT_THRESHOLD = 50000.00;
+
     private static final Logger logger = LoggerFactory.getLogger(TransactionAnalysisServiceImpl.class);
 
     @Override
-    public TransactionAnalysisResponse analyzeTransaction(Transaction transaction, List<Integer> cardUsageCounts) {
-        double amount = transaction.getAmount();
+    public TransactionAnalysisResponse analyzeTransaction(
+        final Transaction transaction, 
+        final List<Integer> cardUsageCounts
+    ) {
+        final double amount = transaction.getAmount();
         int totalCardUsageCount = cardUsageCounts.stream()
                 .mapToInt(Integer::intValue)
                 .sum();
 
         boolean isFraudulent = false;
 
-        if (amount > 50000.00) {
+        if (amount > FRAUDULENT_AMOUNT_THRESHOLD) {
             isFraudulent = true;
         } else if (totalCardUsageCount > 60) {
             isFraudulent = true;
@@ -55,7 +60,7 @@ public class TransactionAnalysisServiceImpl implements TransactionAnalysisServic
      * @param cardNum The card number to obfuscate.
      * @return The obfuscated card number.
      */
-    String obfuscateCardNumber(long cardNum) {
+    String obfuscateCardNumber(final long cardNum) {
         String cardNumber = String.valueOf(cardNum);
         if (cardNumber.length() > 12) {
             cardNumber = cardNumber.substring(0, 4) + "********" + cardNumber.substring(cardNumber.length() - 4);
@@ -63,7 +68,18 @@ public class TransactionAnalysisServiceImpl implements TransactionAnalysisServic
         return cardNumber;
     }
 
-    private void logTransactionInfo(long cardNum, double amount, int cardUsageCount) {
+    /**
+     * Logs the transaction information, including the obfuscated card number, amount, and card usage count.
+     *
+     * @param cardNum        The card number associated with the transaction.
+     * @param amount         The amount of the transaction.
+     * @param cardUsageCount The usage count of the card associated with the transaction.
+     */
+    private void logTransactionInfo(
+        final long cardNum, 
+        final double amount, 
+        final int cardUsageCount
+    ) {
         String obfuscatedCardNumber = obfuscateCardNumber(cardNum);
         logger.debug("Transaction information: Card Number={}, Amount={}, Card Usage Count={}",
                 obfuscatedCardNumber, amount, cardUsageCount);

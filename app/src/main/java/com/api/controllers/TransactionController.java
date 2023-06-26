@@ -56,8 +56,7 @@ public class TransactionController {
      */
     @PostMapping("/analyzeTransaction")
     public ResponseEntity<TransactionAnalysisResponse> analyzeTransaction(
-            @Valid @RequestBody TransactionRequest request) {
-        // Increment the transaction count
+            @Valid @RequestBody final TransactionRequest request) {
         transactionCount++;
 
         Transaction transaction = request.getTransaction();
@@ -76,7 +75,7 @@ public class TransactionController {
 
         TransactionAnalysisResponse response = transactionAnalysisService.analyzeTransaction(transaction, cardUsageCounts);
 
-        // Add the transaction amount to the total transaction amount
+        // Add the transaction amount to the total transaction amount and increment approved transactions accordingly
         totalTransactionAmount += transaction.getAmount();
         if (response.getTransactionStatus().equals(TransactionStatus.APPROVED)) {
             approvedTransactionCount += 1;
@@ -112,7 +111,7 @@ public class TransactionController {
      *
      * @param transactionCount The transaction count to set.
      */
-    public void setTransactionCount(int transactionCount) {
+    public void setTransactionCount(final int transactionCount) {
         this.transactionCount = transactionCount;
     }
 
@@ -121,7 +120,7 @@ public class TransactionController {
      *
      * @param totalTransactionAmount The total transaction amount to set.
      */
-    public void setTotalTransactionAmount(double totalTransactionAmount) {
+    public void setTotalTransactionAmount(final double totalTransactionAmount) {
         this.totalTransactionAmount = totalTransactionAmount;
     }
 
@@ -130,7 +129,7 @@ public class TransactionController {
      *
      * @param approvedTransactionCount The approved transaction count to set.
      */
-    public void setApprovedTransactionCount(int approvedTransactionCount) {
+    public void setApprovedTransactionCount(final int approvedTransactionCount) {
         this.approvedTransactionCount = approvedTransactionCount;
     }
 }

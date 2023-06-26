@@ -22,7 +22,7 @@ public class MonitoringStats {
      *
      * @param percentageApproved The percentage of approved transactions to set.
      */
-    public void setPercentageApproved(double percentageApproved) {
+    public void setPercentageApproved(final double percentageApproved) {
         this.percentageApproved = percentageApproved;
     }
 
@@ -40,7 +40,7 @@ public class MonitoringStats {
      *
      * @param transactionCount The transaction count to set.
      */
-    public void setTransactionCount(int transactionCount) {
+    public void setTransactionCount(final int transactionCount) {
         this.transactionCount = transactionCount;
     }
 
@@ -58,7 +58,7 @@ public class MonitoringStats {
      *
      * @param totalTransactionAmount The total transaction amount to set.
      */
-    public void setTotalTransactionAmount(double totalTransactionAmount) {
+    public void setTotalTransactionAmount(final double totalTransactionAmount) {
         this.totalTransactionAmount = totalTransactionAmount;
     }
 }

@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> handleValidationException(final MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
         return ResponseEntity.badRequest().body(errorMessage);
     }
@@ -34,9 +34,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
-        System.out.println("globabExceptionHandler: got npe: " + ex);
-        String errorMessage = "A required input parameter is missing.";
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    public ResponseEntity<String> handleNullPointerException(final NullPointerException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A required input parameter is missing.");
     }
 }

@@ -17,5 +17,5 @@ public interface TransactionAnalysisService {
      * @return The analysis response containing the card number, transaction amount, transaction status,
      *         and card usage count.
      */
-    TransactionAnalysisResponse analyzeTransaction(Transaction transaction, List<Integer> cardUsageCounts);
+    TransactionAnalysisResponse analyzeTransaction(final Transaction transaction, final List<Integer> cardUsageCounts);
 }

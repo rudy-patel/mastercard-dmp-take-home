@@ -39,7 +39,7 @@ public class ExternalApiServiceImpl implements ExternalApiService {
      * @throws IOException                 If an error occurs while making the request to the external API.
      * @throws ServiceUnavailableException If the external API service is unavailable.
      */
-    public List<Integer> fetchCardUsageCounts(long cardNum) throws IOException, ServiceUnavailableException {
+    public List<Integer> fetchCardUsageCounts(final long cardNum) throws IOException, ServiceUnavailableException {
         List<Integer> cardUsageCounts = new ArrayList<>();
 
         try {

@@ -18,5 +18,5 @@ public interface ExternalApiService {
      * @throws IOException                  If an error occurs while fetching the card usage counts.
      * @throws ServiceUnavailableException  If the external API service is unavailable.
      */
-    List<Integer> fetchCardUsageCounts(long cardNum) throws IOException, ServiceUnavailableException;
+    List<Integer> fetchCardUsageCounts(final long cardNum) throws IOException, ServiceUnavailableException;
 }

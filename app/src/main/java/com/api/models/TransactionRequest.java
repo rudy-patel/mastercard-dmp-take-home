@@ -26,7 +26,7 @@ public class TransactionRequest {
      *
      * @param transaction The transaction object to set.
      */
-    public void setTransaction(Transaction transaction) {
+    public void setTransaction(final Transaction transaction) {
         this.transaction = transaction;
     }
 }

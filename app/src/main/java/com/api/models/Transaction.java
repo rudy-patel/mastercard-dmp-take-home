@@ -31,7 +31,7 @@ public class Transaction {
      *
      * @param cardNum The card number to set.
      */
-    public void setCardNum(long cardNum) {
+    public void setCardNum(final long cardNum) {
         this.cardNum = cardNum;
     }
 
@@ -49,7 +49,7 @@ public class Transaction {
      *
      * @param amount The transaction amount to set.
      */
-    public void setAmount(double amount) {
+    public void setAmount(final double amount) {
         this.amount = amount;
     }
 }

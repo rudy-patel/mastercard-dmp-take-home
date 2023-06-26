@@ -12,7 +12,12 @@ public class TransactionAnalysisResponse {
     /**
      * Constructs an empty TransactionAnalysisResponse object.
      */
-    public TransactionAnalysisResponse() {}
+    public TransactionAnalysisResponse() {
+        this.cardNumber = "";
+        this.transactionAmount = 0.0;
+        this.transactionStatus = null;
+        this.cardUsageCount = 0;
+    }
 
     /**
      * Retrieves the card number associated with the transaction.

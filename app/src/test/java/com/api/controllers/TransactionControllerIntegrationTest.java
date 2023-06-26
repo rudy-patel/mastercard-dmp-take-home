@@ -74,7 +74,6 @@ public class TransactionControllerIntegrationTest {
         transaction.setCardNum(CARD_NUM);
         request.setTransaction(transaction);
 
-        // Set the mock implementation of ExternalApiService
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
         .thenReturn(Collections.singletonList(VALID_CARD_USAGE_COUNT));
     }
@@ -86,7 +85,6 @@ public class TransactionControllerIntegrationTest {
         objectMapper = new ObjectMapper();
         transaction = new Transaction();
         
-        // Prepare the request payload
         request.setTransaction(transaction);
         transaction.setCardNum(CARD_NUM);
         transaction.setAmount(VALID_AMOUNT);
@@ -101,7 +99,6 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_happyCase_TransactionSuccessful() throws Exception {
-        // Prepare the request payload
         transaction.setAmount(VALID_AMOUNT);
 
         // Send the request
@@ -115,7 +112,6 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_AmountOverLimit_TransactionDeclined() throws Exception {
-        // Prepare the request payload
         transaction.setAmount(AMOUNT_OVER_LIMIT);
 
         // Send the request
@@ -129,11 +125,9 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_cardUsageTooLow_transactionDeclined() throws Exception {
-        // Prepare the request payload
         transaction.setAmount(VALID_AMOUNT);
         int cardUsageTooLow = 5;
 
-        // Configure the mock behavior
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
                 .thenReturn(Collections.singletonList(cardUsageTooLow));
 
@@ -148,11 +142,9 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_cardUsageTooHigh_transactionDeclined() throws Exception {
-        // Prepare the request payload
         transaction.setAmount(VALID_AMOUNT);
         int cardUsageTooHigh = 70;
 
-        // Configure the mock behavior
         when(externalApiService.fetchCardUsageCounts(CARD_NUM))
                 .thenReturn(Collections.singletonList(cardUsageTooHigh));
 
@@ -167,7 +159,6 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_missingTransactionField_badRequest() throws Exception {
-        // Prepare the request payload with missing transaction field
         String requestBody = "{}";
 
         // Send the request and assert bad request
@@ -181,7 +172,6 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_invalidCardNumber_badRequest() throws Exception {
-        // Prepare the request payload with invalid card number
         String requestBody = "{\"transaction\": {\"cardNum\": 123, \"amount\": 1000}}";
 
         // Send the request
@@ -199,10 +189,9 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_invalidTransactionAmount_badRequest() throws Exception {
-        // Prepare the request payload with invalid transaction amount
         String requestBody = "{\"transaction\": {\"cardNum\": 1234567890123456, \"amount\": -100}}";
 
-        // Send the request
+        // Send the request and assert bad request
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                 .post("/analyzeTransaction")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -217,12 +206,11 @@ public class TransactionControllerIntegrationTest {
 
     @Test
     public void testAnalyzeTransaction_externalApiServiceUnavailable_internalServerError() throws Exception {
-        // Prepare the request payload
         transaction.setAmount(VALID_AMOUNT);
 
-        // Configure the mock behavior
         when(externalApiService.fetchCardUsageCounts(CARD_NUM)).thenThrow(ServiceUnavailableException.class);
 
+        // Send the request and assert internal server error
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/analyzeTransaction")
                 .contentType(MediaType.APPLICATION_JSON)
